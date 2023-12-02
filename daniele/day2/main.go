@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-// 12 red, 13 green 14 blue
-// sum the IDs of the possible games
 func main() {
 	file, _ := os.Open("data.txt")
 	defer file.Close()
@@ -56,8 +54,6 @@ func main() {
 			}
 		}
 		set_power := max_color["red"] * max_color["green"] * max_color["blue"]
-		// fmt.Println("Possible")
-		// id, _ := strconv.Atoi(strings.Split(id_string, " ")[1])
 		result += set_power
 	}
 	fmt.Println(result)
