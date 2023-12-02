@@ -41,7 +41,6 @@ func main() {
 		}
 		fmt.Println(line)
 
-		// re := regexp.MustCompile("(?:one|two|three|four|five|six|seven|eight|nine|\\d)")
 		re := regexp.MustCompile("(?:\\d)")
 
 		// array of strings (which are ints)
@@ -49,16 +48,6 @@ func main() {
 		fmt.Println("numarray: ", numArray)
 
 		if len(numArray) == 1 {
-			// var num string
-			// if len(numArray[0]) > 1 {
-			// 	num = numberMap[numArray[0]]
-			// } else {
-			// 	num = numArray[0]
-			// }
-			// fullNumString := num + num
-			// fullNum, _ := strconv.Atoi(fullNumString)
-			// fmt.Println(fullNum)
-			// result += fullNum
 			numString := numArray[0]
 			fullNumString := numString + numString
 			fullNum, _ := strconv.Atoi(fullNumString)
@@ -77,26 +66,6 @@ func main() {
 
 			fmt.Println(fullNum)
 			result += fullNum
-
-			// if len(numArray[0]) > 1 {
-			// 	first = numberMap[numArray[0]]
-			// } else {
-			// 	first = numArray[0]
-			// }
-
-			// if len(numArray[len(numArray)-1]) > 1 {
-			// 	second = numberMap[numArray[len(numArray)-1]]
-			// } else {
-			// 	second = numArray[len(numArray)-1]
-			// }
-
-			// fullNumString := first + second
-			// fullNum, err := strconv.Atoi(fullNumString)
-			// if err != nil {
-			// 	log.Fatal("not a number")
-			// }
-			// fmt.Println(fullNum)
-			// result += fullNum
 		}
 	}
 	fmt.Println(result)
