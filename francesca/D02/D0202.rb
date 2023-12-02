@@ -15,7 +15,7 @@ end
 def parse_games_scores(games)
     games.map do |game|
         game.map do |g_str|
-            g_str.scan(/(\d+) (\w+)/).map { |qty, col| { col => qty.to_i } }
+            g_str.scan(/(\d+) (\w+)/).map { |value, color| { color => value.to_i } }
         end.flatten
     end
 end
@@ -34,28 +34,26 @@ def compute_tot_ids(arr)
 end
 
 def find_fewest_cubes(nested_arr)
-    nested_arr.map do |game|
-        max_values = game.each_with_object(Hash.new(0)) do |hash, result|
-            hash.each { |color, value| result[color] = [result[color], value].max }
-        end.transform_keys { |color| color.to_sym }
+    nested_arr.map do |game_arr|
+        game_arr.each_with_object({}) do |game, max_values|
+            game.each { |color, value| max_values[color] = [max_values[color] || 0, value].max }
+        end
     end
 end
 
-def compute_tot_power(arr)
-    arr.map { |hash| hash.values.reduce(:*) }.reduce(:+)
+def compute_tot_few(arr)
+    arr.map { |few_hsh| few_hsh.values.reduce(:*) }.reduce(:+)
 end
 
-## PARSE ##
 games           = parse_games(record)
 games_scores    = parse_games_scores(games)
 
 ## PART 1 ##
 possible_games  = find_possible_games(games_scores)
 tot_possible    = compute_tot_ids(possible_games)
-# p tot_possible
 
 ## PART 2 ##
 fewest_per_game = find_fewest_cubes(games_scores)
-power_fewests   = compute_tot_power(fewest_per_game)
+power_fewests   = compute_tot_few(fewest_per_game)
 
 p power_fewests
