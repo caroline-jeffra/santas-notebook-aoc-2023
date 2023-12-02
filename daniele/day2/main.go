@@ -22,16 +22,24 @@ func main() {
 	colors["blue"] = 14
 
 	result := 0
-Game:
+
+	// LOOP FOR GAME
 	for scanner.Scan() {
 		line := scanner.Text()
 		// split on the : to get the id and the rounds as a group
 		split := strings.Split(line, ":")
-		id_string, rounds_string := split[0], split[1]
+		_, rounds_string := split[0], split[1]
 		// split the rounds group on the ; to get the single rounds
 		rounds := strings.Split(rounds_string, ";")
 
+		max_color := make(map[string]int)
+		max_color["red"] = 0
+		max_color["green"] = 0
+		max_color["blue"] = 0
+
 		fmt.Println("\nGame: ")
+
+		// LOOP FOR ROUND
 		for _, round := range rounds {
 			fmt.Println("Round: ", round)
 			// split the single rounds on the , to get the colors
@@ -42,17 +50,15 @@ Game:
 				str_amount, color := strings.TrimSpace(s[0]), strings.TrimSpace(s[1])
 				fmt.Println("Color: ", color)
 				amount, _ := strconv.Atoi(str_amount)
-				if colors[color] < amount {
-					// if any amount exceeds the threshold, break
-					fmt.Println("Impossible")
-					continue Game
+				if max_color[color] < amount {
+					max_color[color] = amount
 				}
 			}
 		}
-		// if you get to the end, add id to the total
-		fmt.Println("Possible")
-		id, _ := strconv.Atoi(strings.Split(id_string, " ")[1])
-		result += id
+		set_power := max_color["red"] * max_color["green"] * max_color["blue"]
+		// fmt.Println("Possible")
+		// id, _ := strconv.Atoi(strings.Split(id_string, " ")[1])
+		result += set_power
 	}
 	fmt.Println(result)
 }
