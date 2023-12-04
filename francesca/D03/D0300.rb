@@ -1,12 +1,13 @@
 class GearRatio
     require 'daru'
-    SYM_XP = /[*|#|+|$]/
+    SYM_XP = /[^a-zA-Z0-9.\s]/
     
-    attr_reader :frame, :symbols_coords, :proximity_coords
+    attr_reader :frame, :symbols_coords, :proximity_coords, :valid_numbers
     def initialize(txt_path)
         @frame            = parse_to_frame("#{__dir__}/#{txt_path}")
         @symbols_coords   = find_symbols_coordinates()
         @proximity_coords = compute_proximity_coordinates()
+        @valid_numbers    = extract_valid_numbers()
     end
     
     private
@@ -31,6 +32,7 @@ class GearRatio
     # @proximity_coords => [{:row=>0, :col=>"col_2"}, {:row=>0, :col=>"col_3"},...]
     def compute_proximity_coordinates
         @symbols_coords.flat_map { |cell| generate_neighbors(cell[:row], cell[:col]) }
+        .select { |coord| @frame[coord[:col]][coord[:row]].match?(/\d/) }
     end
     
     def generate_neighbors(row, col)
@@ -42,6 +44,25 @@ class GearRatio
             
             { row: row + row_offset, col: "col_#{col_number + col_offset}" }
         end.compact
+    end
+    
+    def extract_valid_numbers
+        @proximity_coords.map do |coord|
+            row = coord[:row]
+            col = coord[:col]
+            
+            col_index = col.scan(/\d+/).first.to_i
+            number = @frame[row][col_index].to_i
+            left_index = col_index - 1
+
+            adjacent_digits = []
+            while left_index >= 0 && @frame[row][left_index].to_i.to_s == @frame[row][left_index]
+                adjacent_digits.unshift(@frame[row][left_index].to_i)
+                left_index -= 1
+            end
+            
+            adjacent_digits.join.to_i
+        end
     end
 end
 
