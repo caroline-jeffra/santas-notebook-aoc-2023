@@ -17,20 +17,33 @@ def compute_wins_per_card(cards)
     cards.map.with_index { |card, idx| { idx+1 => (card[:winning] & card[:owned]).size } }
 end
 
-# SLTN >>> proceed sequentially through keys
+# wins = [{1=>4}, {2=>2}, {3=>2}, {4=>1}, {5=>0}, {6=>0}]
 def compute_total_cards(wins)
-    # wins = [{1=>4}, {2=>2}, {3=>2}, {4=>1}, {5=>0}, {6=>0}]
-    # iterate over array
-        # win = {1=>4} 
-        # get correspective cards & add them to wins
-            # PRBL >>> duplicate keys
-            # SLTN >>> when ^, store values in array
-                # win = {2=>[2,2]}
-                # [...]
+    begin
+        wins.each do |card|
+            # win = {1=>4}
+
+            next_upper = card.keys.first
+            next_lower = card[next_upper]
+            new_cards  = wins[next_upper..next_lower]
+            # new_cards = {2=>2}, {3=>2}, {4=>1}, {5=>0}
+            
+            new_cards.each do |new_card|
+                # new_card = {2=>2}
+                id  = new_card.keys.first
+                idx = id - 1
+                wins[idx][id] = [wins[idx][id]] + [new_card[id]]
+            end
+        end
+        # win = {2=>[2,2]}
+    rescue ArgumentError => e
+        return wins
+    end
 end
 
 ## TEST AREA ##
 cards = parse_cards("input.txt")
 wins  = compute_wins_per_card(cards)
 
-pp wins
+p compute_total_cards(wins)
+# => [{1=>4}, {2=>[2, 2]}, {3=>[2, 2]}, {4=>[1, 1]}, {5=>[0, 0]}, {6=>0}]
