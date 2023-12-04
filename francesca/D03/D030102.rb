@@ -3,7 +3,7 @@ class GearRatio
 
     def initialize(rel_path)
       @scheme = File.open("#{__dir__}/#{rel_path}").read.split("\n")
-      @frame  = generate_engine
+      @frame  = generate_frame()
     end
     
     def engine_sum
@@ -16,7 +16,7 @@ class GearRatio
     
     private
     
-    def generate_engine
+    def generate_frame
         @scheme.each_with_object([]) do |line, matrix|
             numbers = line.scan(/(?:\d+|.)/)
             matrix << numbers.flat_map { |number| [number] * number.length }
@@ -29,12 +29,12 @@ class GearRatio
     
     def multiply_pairs
         calculate_engine_sum do |tot, adjacents|
-            acc + (adjacents.reduce(&:*) if adjacents.size == 2).to_i
+            tot + (adjacents.reduce(&:*) if adjacents.size == 2).to_i
         end
     end
     
     def calculate_engine_sum
-        @frame.each_with_index.reduce(0) do |acc, (row, idx_x)|
+        @frame.each_with_index.reduce(0) do |tot, (row, idx_x)|
             row.each_with_index do |item, idx_y|
                 next if item.scan(/(?:\d|\.)/).first
                 
