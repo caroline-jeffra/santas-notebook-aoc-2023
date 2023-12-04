@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"slices"
 	"strings"
@@ -15,13 +14,21 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	result := 0
+	lines := []string{}
+
+	indexMap := make(map[int]int)
+
+	// Populate the map with keys from 0 to 213 and values set to 1
+	for i := 0; i <= 213; i++ {
+		indexMap[i] = 1
+	}
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		// split the line between the winning numbers and the card numbers
-		// split each of them on the space
-		// count how many of the card appear in the winning array
-		// calculate score and add to result
+		lines = append(lines, line)
+	}
+
+	for line_index, line := range lines {
 		card := strings.Split(strings.Split(line, ":")[1], "|")
 		winning_nums := strings.Split(card[0], " ")
 		winning_nums = delete_empty(winning_nums)
@@ -30,10 +37,18 @@ func main() {
 		card_nums = delete_empty(card_nums)
 
 		card_score := calculate_score(winning_nums, card_nums)
-		result += card_score
 
-		// fmt.Println(winning_nums)
-		// fmt.Println(card_nums)
+		for times := 0; times < indexMap[line_index]; times++ {
+
+			// increase the values of the map accordingly
+			for i := line_index + 1; i <= line_index+card_score; i++ {
+				indexMap[i] = indexMap[i] + 1
+			}
+		}
+	}
+
+	for _, val := range indexMap {
+		result += val
 	}
 
 	fmt.Println("Result: ", result)
@@ -57,10 +72,5 @@ func calculate_score(winning []string, card []string) int {
 		}
 	}
 
-	if n < 2 {
-		return n
-	} else {
-		// return 2 to the power of n - 1
-		return int(math.Pow(float64(2), float64(n-1)))
-	}
+	return n
 }
