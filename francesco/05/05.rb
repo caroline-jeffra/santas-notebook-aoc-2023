@@ -13,8 +13,8 @@ almanac = data.split("\n\n")[1..]
 
 locations = []
 
-def next_value(value, chart)
-  chart.each do |(dst, src, len)|
+def next_value(value, map)
+  map.each do |(dst, src, len)|
     return dst + value - src if value.between? src, src + len - 1
   end
 
