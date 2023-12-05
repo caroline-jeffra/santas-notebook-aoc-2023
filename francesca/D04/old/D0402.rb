@@ -34,7 +34,3 @@ def compute_total_cards(wins)
         end
     end.flat_map { |hash| hash.values }.flatten.count
 end
-
-## TEST AREA ##
-tot_cards = compute_total_cards(wins)
-pp tot_cards
