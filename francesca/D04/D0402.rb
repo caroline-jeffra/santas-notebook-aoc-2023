@@ -1,3 +1,4 @@
+require 'pry-byebug'
 def process_game_part(game_part)
     game_part.split(/\s/).map(&:to_i).reject(&:zero?)
 end
@@ -16,22 +17,24 @@ def compute_wins_per_card(cards)
 end
 
 def compute_total_cards(wins)
+    @wins = compute_wins_per_card(parse_cards("input.txt"))
     wins.each do |card|
-        key   = card.keys.first
-        value = card[key].flatten.sum
+        key    = card.keys.first
+        values = card[key]
 
-        new_cards  = wins[key..value]
-        new_cards.each do |new_card|
-            id  = new_card.keys.first
-            idx = id - 1
-            wins[idx][id] = ([wins[idx][id]] + [new_card[id]]).flatten
+        unless values.include?(0)
+            values.each do |value|
+                new_cards  = @wins[key...(key + value)]
+                new_cards.each do |new_card|
+                    id  = new_card.keys.first
+                    idx = id - 1
+                    wins[idx][id] = ([wins[idx][id]] + [new_card[id]]).flatten
+                end
+            end
         end
-    end.flat_map { |hash| hash.values }.flatten.sum
+    end.flat_map { |hash| hash.values }.flatten.count
 end
 
 ## TEST AREA ##
-cards     = parse_cards("input.txt")
-wins      = compute_wins_per_card(cards)
 tot_cards = compute_total_cards(wins)
-
 pp tot_cards
