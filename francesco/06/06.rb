@@ -2,6 +2,11 @@
 
 data = File.open('input').read.split("\n")
 
+# distance (d), duration (t), elapsed time (x)
+#    d = x * (t - x)
+# => x^2 -tx + d = 0
+# => x = (t ± √t^2 - 4d)/2
+
 def largest_int_lt(float)
   float == float.floor ? float.floor - 1 : float.floor
 end
