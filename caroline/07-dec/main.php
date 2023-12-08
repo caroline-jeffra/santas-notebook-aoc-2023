@@ -53,27 +53,22 @@ function hand_type( string $hand ){
   switch (count($counter)) {
     case 1:
       return 7;
-      break;
     case 2:
       if ( in_array( 4, $counter )){
         return 6;
       } else {
         return 5;
       }
-      break;
     case 3:
       if ( in_array( 3, $counter )){
         return 4;
       } else {
         return 3;
       }
-      break;
     case 4:
       return 2;
-      break;
     case 5:
       return 1;
-      break;
     default:
       print_r('error in hand_type. counter_size returning invalid length');
       break;
