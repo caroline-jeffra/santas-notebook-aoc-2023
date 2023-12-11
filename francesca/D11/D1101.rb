@@ -62,25 +62,12 @@ class Matrix
         (1..last).to_a
     end
 
-    def galaxies_coords
-        self.galaxies_ids.map { |galaxy| { galaxy => self.index(galaxy) } }
-    end
-
-    def find_coords(point)
-        self.galaxies_coords.find { |hash| hash.keys.first == point }[point]
-    end
-
-    def manhattan_distance(point1, point2)
-        (point2[0] - point1[0]).abs + (point2[1] - point1[1]).abs
-    end
-
     def shortest_paths_sum
         pairs  = self.galaxies_ids.combination(2).to_a
-        coords = self.galaxies_coords
 
         pairs.map do |point1, point2|
-            coords1, coords2 = find_coords(point1), find_coords(point2)
-            manhattan_distance(coords1, coords2)
+            coords1, coords2 = self.index(point1), self.index(point2)
+            (coords1[0] - coords2[0]).abs + (coords1[1] - coords2[1]).abs
         end.flatten.sum
     end
 end
@@ -88,3 +75,4 @@ end
 ## TEST AREA ##
 expanded_universe  = parse_galaxies("input.txt").expand_cosmos.assign_galaxy_id
 shortest_paths_sum = expanded_universe.shortest_paths_sum
+pp shortest_paths_sum
