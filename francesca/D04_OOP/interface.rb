@@ -5,3 +5,4 @@ FILEPATH       = "#{__dir__}/input.txt"
 cards  = CardParser.parse_cards(FILEPATH)
 wallet = Wallet.new(cards)
 
+pp wallet.card_copies

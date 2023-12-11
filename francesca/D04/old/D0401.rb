@@ -16,7 +16,7 @@ def find_winning_numbers(cards)
 end
 
 def compute_total_score(winning_nums)
-    winning_nums.map { |score| score.size > 1 ? (2 ** score.size - 1) : score.size }.sum
+    winning_nums.map { |score| score.size > 1 ? (2 ** score.size-1) : score.size }.sum
 end
 
 ## TEST AREA ##
