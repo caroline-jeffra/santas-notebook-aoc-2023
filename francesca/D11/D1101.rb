@@ -8,12 +8,9 @@ def parse_galaxies(filepath)
 end
 
 class Matrix
-    def is_galaxy?(char) = char.match?(/\#/)
-    def is_empty?(char)  = char.match?(/\./)
-    def all_empty?(arr)  = arr.all? { |char| is_empty?(char) }
-        
-    def empty_rows = (0...row_count).select { |idx| all_empty?(row(idx).to_a) }
-    def empty_cols = (0...column_count).select { |idx| all_empty?(column(idx).to_a) }
+    def all_empty?(arr) = arr.all? { |char| char.match?(/\./) }
+    def empty_rows      = (0...row_count).select { |idx| all_empty?(row(idx).to_a) }
+    def empty_cols      = (0...column_count).select { |idx| all_empty?(column(idx).to_a) }
 
     def insert_row_at_index(idx, new_row)
         rows = self.to_a
@@ -41,7 +38,7 @@ class Matrix
         end
 
         empty_cols.each_with_index do |idx, i|
-            new_col = Vector[*Array.new(row_count, ".")]
+            new_col    = Vector[*Array.new(row_count, ".")]
             new_matrix = new_matrix.insert_column_at_index(idx+1, new_col)
 
             empty_cols[i+1] += 1 unless empty_cols[i+1].nil?
@@ -50,19 +47,44 @@ class Matrix
     end
 
     def assign_galaxy_id
-        id    = 0
-        @rows = self.to_a.map do |row|
+        id = 0
+        self.to_a.map do |row|
           row.map do |char|
-            id += 1 if is_galaxy?(char)
+            id += 1 if char.match?(/\#/)
             char.match?(/\#/) ? id : char 
           end
-        end
+        end => rows
+        Matrix[*rows]
+    end
+
+    def galaxies_ids
+        last = self.count { |char| char.class == Integer }
+        (1..last).to_a
+    end
+
+    def galaxies_coords
+        self.galaxies_ids.map { |galaxy| { galaxy => self.index(galaxy) } }
+    end
+
+    def find_coords(point)
+        self.galaxies_coords.find { |hash| hash.keys.first == point }[point]
+    end
+
+    def manhattan_distance(point1, point2)
+        (point2[0] - point1[0]).abs + (point2[1] - point1[1]).abs
+    end
+
+    def shortest_paths_sum
+        pairs  = self.galaxies_ids.combination(2).to_a
+        coords = self.galaxies_coords
+
+        pairs.map do |point1, point2|
+            coords1, coords2 = find_coords(point1), find_coords(point2)
+            manhattan_distance(coords1, coords2)
+        end.flatten.sum
     end
 end
 
 ## TEST AREA ##
-galaxies_matrix = parse_galaxies("input.txt")
-                .expand_cosmos
-                .assign_galaxy_id
-
-pp galaxies_matrix
+expanded_universe  = parse_galaxies("input.txt").expand_cosmos.assign_galaxy_id
+shortest_paths_sum = expanded_universe.shortest_paths_sum
