@@ -2,15 +2,13 @@ require_relative "#{__dir__}/../models/card"
 
 module CardParser
     extend self
-
     def parse_cards(filepath)
-        flat_cards = File.open(filepath).each_line.map.with_index do |line, idx|
+        File.open(filepath).each_line.map.with_index do |line, idx|
             game           = line.chomp.split(/\: /).last.split(/\s\|\s/)
-            winning, owned = self.process_card_slice(game.first), self.process_card_slice(game.last)
+            winning, owned = process_card_slice(game.first), process_card_slice(game.last)
             
             { id: idx+1, winning: winning, owned: owned }
-        end
-
+        end => flat_cards
         self.create_cards(flat_cards)
     end
 
