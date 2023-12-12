@@ -50,7 +50,8 @@ Check:
 
 	newSlice := makeNewSlice(nums)
 	sum := calculateValue(newSlice)
-	return sum + nums[len(nums)-1]
+	// return sum + nums[len(nums)-1]
+	return nums[0] - sum
 }
 
 func convertLine(line string) []int {
