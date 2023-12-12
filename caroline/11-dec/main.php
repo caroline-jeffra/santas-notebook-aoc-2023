@@ -26,7 +26,7 @@ foreach( $lines as $line ){
   }
   if( $galaxy_found == false ){
     array_push( $y_empty, $y_current );
-    $y_current += 2;
+    $y_current += 1000000;
   } else {
     $y_current += 1;
   }
@@ -112,7 +112,7 @@ class Galaxy {
       $offset_count = 0;
       if( $this->x > $location ){
         $offset_count += 1;
-        $this->x += 1;
+        $this->x += 999999;
       }
     }
   }
